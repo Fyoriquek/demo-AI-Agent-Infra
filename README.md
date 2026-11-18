@@ -58,10 +58,14 @@ demo-agent-vpc/
 * [Pulumi CLI](https://pulumi.com)
 * [Ollama](https://ollama.com) with a local model pulled (`ollama pull qwen2.5:1.5b`)
 
+---
+
 ### 1. Check Makefile for building Go binaries, examples, etc
 ```
 Before using make commands, run "go mod init demo-agent-vpc" and "go mod tidy" in the root directory of the project.
 In case of errors, check your go env. Make sure GO111MODULE is set to "on".
+
+This repo already contains the go.mod file, and you can go ahead to run examples.
 ```
 ### 2. Deploy via Natural Language Prompt
 ```bash
