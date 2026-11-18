@@ -1,5 +1,5 @@
 # Demo for AI Agent for PoC Infrastructure Deployment 
-BINARY_NAME := demo-agent-vpc
+BINARY_NAME := demo-agent-vpc-nat
 CMD_PATH    := ./cmd/agent
 MODEL       ?= qwen2.5:1.5b
 ENV         ?= dev
