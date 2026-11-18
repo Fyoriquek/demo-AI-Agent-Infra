@@ -40,7 +40,7 @@ Non-expert users can request infrastructure via plain English without risking mi
 * [Pulumi CLI](https://pulumi.com)
 * [Ollama](https://ollama.com) with a local model pulled (`ollama pull qwen2.5:1.5b`)
 
-### 1. Check Makefile for building Go binaries, running examples, etc)
+### 1. Check Makefile for building Go binaries, examples, etc
 ```
 Before using make commands, run "go mod init demo-agent-vpc" and "go mod tidy" in the root directory of the project.
 In case of errors, check your go env. Make sure GO111MODULE is set to "on".
