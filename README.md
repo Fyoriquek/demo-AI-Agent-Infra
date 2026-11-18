@@ -79,8 +79,113 @@ Before using make commands, run "go mod init demo-agent-vpc" and "go mod tidy" i
 In case of errors, check your go env. Make sure GO111MODULE is set to "on".
 ```
 
+### Example for Makefile
+#### a. Build binaries
+```bash
+demo-AI-Agent-Infra/demo-agent-vpc-nat$ make build
+go build -o bin/demo-agent-vpc-nat ./cmd/agent
+```
+#### b. Deploy one of the examples with Natural Language Prompt 
+```bash
+demo-AI-Agent-Infra/demo-agent-vpc-nat# make demo-vpc-nat-instance
+go run ./cmd/agent \
+        -prompt "Deploy a VPC named single-nat-instance-lab in 10.40.0.0/16 with NAT and t3.small instance and port 2181 open"
+1. Parsing intent via Ollama (qwen2.5:1.5b)...
+2. Inspecting live LocalStack VPC state & running Go guardrails...
 
-### 2. Example Deploy via Natural Language Prompt
+==========================================
+             DEMO AGENT AND NAT
+==========================================
+  [ADJUSTED] Direct public IP assignment requested — overridden to private subnet (use an ALB/NAT for ingress)
+
+--- Final Approved Topology ---
+  Stack Name:    single-nat-instance-lab
+  VPC CIDR:      10.40.0.0/16 (requested: 10.40.0.0/16)
+  Public Subnet CIDR:   10.40.1.0/24 (public)
+  Private Subnet CIDR:   10.40.2.0/24 (private)
+  NAT Gateway:     true
+  Instance Type: t3.small (requested: t3.small)
+  Allowed Ports: [2181]
+==========================================
+
+  Instance Type:   t3.small (requested: t3.small)
+  Allowed Ports:   [2181]
+==========================================
+
+3. Running Pulumi Preview against LocalStack...
+Previewing update (single-nat-instance-lab):
+
+[ ...... snip ....... ]
+
+Outputs:
+    instanceId            : "i-cf4b6d478963676d5"
+    internetGatewayId     : "igw-957a413e49a379b3b"
+    natGatewayId          : "nat-46014fdf7c3b7ef06"
+    privateComputeSubnetId: "subnet-c0a32ae9c4e4b8eff"
+    publicNatSubnetId     : "subnet-f8c84aa86bb6ada12"
+    securityGroupId       : "sg-341069e919544e4a0"
+    vpcId                 : "vpc-25541b9a04403f730"
+
+Resources:
+    + 14 created
+
+Duration: 13s
+```
+#### c. Check new resources deployed
+```bash
+demo-AI-Agent-Infra/demo-agent-vpc-nat# make verify-aws
+=== VPCs ===
+----------------------------------------------------------------------------------------
+|                                     DescribeVpcs                                     |
++---------------+------------+-------------------------------+-------------------------+
+|     CIDR      | IsDefault  |             Name              |          VpcId          |
++---------------+------------+-------------------------------+-------------------------+
+|  172.31.0.0/16|  True      |  None                         |  vpc-cb85bf512e2acf3d5  |
+|  10.40.0.0/16 |  False     |  single-nat-instance-lab-vpc  |  vpc-25541b9a04403f730  |
++---------------+------------+-------------------------------+-------------------------+
+---------------------------------------------------------------------------------------------------------
+|                                            DescribeSubnets                                            |
++---------------------------+--------------------------------------------------+------------------------+
+|         SubnetId          |                      Tags                        |         VpcId          |
++---------------------------+--------------------------------------------------+------------------------+
+|  subnet-1ef8331f65a261f24 |  None                                            |  vpc-cb85bf512e2acf3d5 |
+|  subnet-acfe47e7f93bd157c |  None                                            |  vpc-cb85bf512e2acf3d5 |
+|  subnet-7bbf4302fdd65c8e6 |  None                                            |  vpc-cb85bf512e2acf3d5 |
+|  subnet-57c7c498e87841ef8 |  None                                            |  vpc-cb85bf512e2acf3d5 |
+|  subnet-c0a32ae9c4e4b8eff |  single-nat-instance-lab-private-compute-subnet  |  vpc-25541b9a04403f730 |
+|  subnet-b2a9b0a5e6253fee9 |  None                                            |  vpc-cb85bf512e2acf3d5 |
+|  subnet-0581d5953cea4b3a8 |  None                                            |  vpc-cb85bf512e2acf3d5 |
+|  subnet-f8c84aa86bb6ada12 |  single-nat-instance-lab-public-nat-subnet       |  vpc-25541b9a04403f730 |
++---------------------------+--------------------------------------------------+------------------------+
+----------------------------------------------------------------------
+|                       DescribeSecurityGroups                       |
++----------------------+-------------------+-------------------------+
+|  sg-ba956d08623c1f342|  default          |  vpc-cb85bf512e2acf3d5  |
+|  sg-b7360749a73419dec|  default          |  vpc-25541b9a04403f730  |
+|  sg-341069e919544e4a0|  demo-sg-b79de25  |  vpc-25541b9a04403f730  |
++----------------------+-------------------+-------------------------+
+----------------------------------------------------------------------------------
+|                                DescribeInstances                               |
++-----------------------+-----------------------+--------------------------------+
+|  vpc-25541b9a04403f730|  i-cf4b6d478963676d5  |  single-nat-instance-lab-node  |
++-----------------------+-----------------------+--------------------------------+
+-------------------------------------------------------------------------------------------------------------------------------
+|                                                     DescribeNatGateways                                                     |
++-----------------------+----------------------------------+------------+---------------------------+-------------------------+
+|          ID           |              Name                |   State    |          Subnet           |          VpcId          |
++-----------------------+----------------------------------+------------+---------------------------+-------------------------+
+|  nat-46014fdf7c3b7ef06|  single-nat-instance-lab-nat-gw  |  available |  subnet-f8c84aa86bb6ada12 |  vpc-25541b9a04403f730  |
++-----------------------+----------------------------------+------------+---------------------------+-------------------------+
+-----------------------------------------------------------------------
+|                      DescribeInternetGateways                       |
++------------------------+-------------------------------+------------+
+|           ID           |             Name              |   State    |
++------------------------+-------------------------------+------------+
+|  igw-957a413e49a379b3b |  single-nat-instance-lab-igw  |  available |
++------------------------+-------------------------------+------------+
+```
+
+### 2. Example Deploy via Natural Language Prompt in Terminal
 
 ```bash
 $ go run ./cmd/agent -prompt "Deploy an m5.4xlarge server in 10.10.0.0/16 and open port 22 and 443"
