@@ -34,7 +34,7 @@ flowchart TD
 ## Project Structure
 
 ```text
-demo-agent-vpc/
+demo-agent-vpc-nat/
 ├── cmd/agent/main.go                  # CLI flags, audit summary renderer, & [y/N] approval gate
 ├── internal/
 │   ├── llm/ollama_parser.go           # Ollama /api/chat client enforcing strict JSON Schema output
