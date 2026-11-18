@@ -31,6 +31,24 @@ Non-expert users can request infrastructure via plain English without risking mi
 * **Instance Quota Enforcement:** Downgrades oversized instance requests (e.g., `m5.4xlarge`) to approved development sizes (`t3.nano`, `t3.micro`, `t3.small`).
 * **Human-in-the-Loop Dry-Run:** Executes `stack.Preview()` before mutating state and requires explicit terminal confirmation.
 
+---
+
+## Project Structure
+
+```text
+demo-agent-vpc/
+├── cmd/agent/main.go                  # CLI flags, audit summary renderer, & [y/N] approval gate
+├── internal/
+│   ├── llm/ollama_parser.go           # Ollama /api/chat client enforcing strict JSON Schema output
+│   ├── policy/
+│   │   ├── guardrail.go               # Deterministic security, FinOps, & net/netip subnet carver
+│   │   └── guardrail_test.go          # Table-driven unit tests for policy & CIDR edge cases
+│   └── provisioner/
+│       ├── aws_discovery.go           # Live LocalStack VPC CIDR inspection via aws-sdk-go-v2
+│       └── pulumi_runner.go           # Inline Pulumi Go program with local state backend
+└── Makefile                           # Convenience targets ( run, destroy)
+```
+---
 
 ## Quickstart
 
