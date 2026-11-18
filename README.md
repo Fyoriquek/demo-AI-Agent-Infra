@@ -11,6 +11,6 @@ A local-first, guardrailed AI platform engineering agent written in **Golang**. 
 ---
 
 ## Homework 
-1. The code comparison of these demo-agent-vpc and demo-agent-vpc-nat should you give an idea about the internals of the AI agent to continue the development for other resources to be deployed (Lambdas, S3 buckets, Multi-Availability-Zones, etc).
+1. The code comparison of these demo-agent-vpc and demo-agent-vpc-nat should give you an idea about the internals of the AI agent to continue the development for other resources to be deployed (Lambdas, S3 buckets, Multi-Availability-Zones, etc).
 2. Transition of the agent to deploy on AWS Cloud.
 3. What if you transition towards a full Cloud Native LLM approach, and run the agent inside the AWS Cloud (on EKS or ECS) and swap Ollama Local LLM with Amazon Bedrock?
