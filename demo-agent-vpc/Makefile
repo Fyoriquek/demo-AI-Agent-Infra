@@ -17,7 +17,7 @@ vet: ## Run Go static analysis and formatting check
 	gofmt -s -w .
 	go vet ./...
 
-build: ## Compile the vpc-guardian CLI binary
+build: ## Compile the vpc-demo CLI binary
 	go build -o bin/$(BINARY_NAME) $(CMD_PATH)
 
 demo-vpc: ## Deploy Single-AZ VPC with t3.instance & and port 443 open
