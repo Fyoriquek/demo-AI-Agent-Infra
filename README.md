@@ -65,7 +65,6 @@ demo-agent-vpc/
 Before using make commands, run "go mod init demo-agent-vpc" and "go mod tidy" in the root directory of the project.
 In case of errors, check your go env. Make sure GO111MODULE is set to "on".
 
-This repo already contains the go.mod file, and you can go ahead to run examples.
 ```
 ### 2. Deploy via Natural Language Prompt
 ```bash
